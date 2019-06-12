@@ -20,7 +20,7 @@ import (
 )
 
 const (
-  ETH string = "eth")
+  ETH string = "eth"
 )
 
 func ParsePayload(validator sdk.AccAddress, event *events.LockEvent) (types.EthBridgeClaim, error) {
