@@ -19,6 +19,10 @@ import (
   "github.com/swishlabsco/cosmos-ethereum-bridge/x/ethbridge/types"
 )
 
+const (
+  ETH string = "eth")
+)
+
 func ParsePayload(validator sdk.AccAddress, event *events.LockEvent) (types.EthBridgeClaim, error) {
   
   witnessClaim := types.EthBridgeClaim{}
@@ -44,11 +48,7 @@ func ParsePayload(validator sdk.AccAddress, event *events.LockEvent) (types.EthB
   witnessClaim.Validator = validator
 
   // Amount type casting (*big.Int -> sdk.Coins)
-  ethereumCoin := []string {event.Value.String(),"ethereum"}
-  weiAmount, coinErr := sdk.ParseCoins(strings.Join(ethereumCoin, ""))
-  if coinErr != nil {
-    fmt.Errorf("%s", coinErr)
-  }
+  weiAmount := sdk.NewCoins(sdk.NewInt64Coin(ETH, event.Value.Int64))
   witnessClaim.Amount = weiAmount
 
   return witnessClaim, nil
