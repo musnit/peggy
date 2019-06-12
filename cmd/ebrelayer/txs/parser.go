@@ -38,9 +38,9 @@ func ParsePayload(validator sdk.AccAddress, event *events.LockEvent) (types.EthB
   witnessClaim.EthereumSender = event.From.Hex()
 
   // CosmosReceiver type casting (bytes[] -> sdk.AccAddress)
-  recipient, recipientErr := sdk.AccAddressFromBech32(string(event.To[:]))
-  if recipientErr != nil {
-    fmt.Errorf("%s", recipientErr)
+  recipient := sdk.AccAddress(event.To)
+  if recipient.Empty() { {
+    return
   }
   witnessClaim.CosmosReceiver = recipient
 
