@@ -24,15 +24,22 @@ import (
 	"github.com/swishlabsco/cosmos-ethereum-bridge/x/ethbridge/types"
 )
 
-func RelayEvent(chainId string, cdc *amino.Codec, validatorAddress sdk.AccAddress, validatorName string, passphrase string, claim *types.EthBridgeClaim) error {
+// RelayEvent
+//
+// Applies validator's signature to an EthBridgeClaim message containing information
+// 		about an event on the Ethereum blockchain before sending it to the Bridge
+//		blockchain. For this relay, the chain id (chainID) and codec (cdc) of the
+//		Bridge blockchain are required.
+//
+func RelayEvent(chainId string, cdc *amino.Codec, fromAddress sdk.AccAddress, moniker string, passphrase string, claim *types.EthBridgeClaim) error {
 
 	cliCtx := context.NewCLIContext().
 		WithCodec(cdc).
 		WithAccountDecoder(cdc)
 
 	cliCtx = cliCtx.
-		WithFromAddress(validatorAddress).
-		WithFromName(validatorName)
+		WithFromAddress(fromAddress).
+		WithFromName(moniker)
 
 	cliCtx.SkipConfirm = true
 
@@ -62,7 +69,7 @@ func RelayEvent(chainId string, cdc *amino.Codec, validatorAddress sdk.AccAddres
 	}
 
 	// build and sign the transaction
-	txBytes, err := txBldr.BuildAndSign(validatorName, passphrase, []sdk.Msg{msg})
+	txBytes, err := txBldr.BuildAndSign(moniker, passphrase, []sdk.Msg{msg})
 	if err != nil {
 		fmt.Printf("Msg build/sign error: %s", err)
 		return err
