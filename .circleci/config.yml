@@ -1,5 +1,5 @@
 version: 2.1
-orbs: # specify all orbs you want to use.
+orbs: # specify all orbz you want to use.
   aws-code-deploy: circleci/aws-code-deploy@1.0.0
 jobs: # basic units of work in a run
   build__test_go: # runs not using Workflows must have a `build` job as entry point
