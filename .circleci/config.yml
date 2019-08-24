@@ -2,7 +2,7 @@ version: 2.1
 orbs: # specify all orbz you want to use.
   aws-code-deploy: circleci/aws-code-deploy@0.0.9
 jobs: # basic units of work in a run
-  build__test_go: # runs not using Workflows must have a `build` job as entry point
+  build_test_go: # runs not using Workflows must have a `build` job as entry point
     docker: # run the steps with Docker
       # CircleCI Go images available at: https://hub.docker.com/r/circleci/golang/
       - image: circleci/golang:1.12 #
