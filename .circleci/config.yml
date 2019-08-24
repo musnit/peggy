@@ -1,6 +1,8 @@
-version: 2 # use CircleCI 2.0
+version: 2.1
+orbs: # specify all orbs you want to use.
+  aws-code-deploy: circleci/aws-code-deploy@1.0.0
 jobs: # basic units of work in a run
-  build: # runs not using Workflows must have a `build` job as entry point
+  build__test_go: # runs not using Workflows must have a `build` job as entry point
     docker: # run the steps with Docker
       # CircleCI Go images available at: https://hub.docker.com/r/circleci/golang/
       - image: circleci/golang:1.12 #
@@ -31,7 +33,7 @@ jobs: # basic units of work in a run
             gotestsum --junitfile ${TEST_RESULTS}/unit-tests.xml
       - store_test_results:
           path: /tmp/test-results
-  contracts:
+  test_contracts:
     # The primary container is an instance of the first image listed. The job's commands run in this container.
     docker:
       # specify the version you desire here
@@ -64,4 +66,15 @@ jobs: # basic units of work in a run
       - store_test_results:
           path: /tmp/contract-test-results
       - run: exit
-
+workflows:
+  build_test_deploy:
+    jobs:
+      - build_test_go
+      - test_contracts
+      - aws-code-deploy/deploy:
+          requires: build_test_go
+          application-name: myApplication # The name of an AWS CodeDeploy application associated with the applicable IAM user or AWS account.
+          deployment-group: myDeploymentGroup # The name of a new deployment group for the specified application.
+          service-role-arn: myDeploymentGroupRoleARN # The service role for a deployment group.
+          bundle-bucket: myApplicationS3Bucket # The s3 bucket where an application revision will be stored.
+          bundle-key: myS3BucketKey # A key under the s3 bucket where an application revision will be stored.
