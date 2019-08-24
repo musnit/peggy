@@ -72,7 +72,6 @@ workflows:
       - build_test_go
       - test_contracts
       - aws-code-deploy/deploy:
-          requires: build_test_go
           application-name: myApplication # The name of an AWS CodeDeploy application associated with the applicable IAM user or AWS account.
           deployment-group: myDeploymentGroup # The name of a new deployment group for the specified application.
           service-role-arn: myDeploymentGroupRoleARN # The service role for a deployment group.
