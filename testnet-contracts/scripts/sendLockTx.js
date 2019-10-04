@@ -84,7 +84,7 @@ module.exports = async () => {
   if (NETWORK_ROPSTEN) {
     provider = new HDWalletProvider(
       process.env.MNEMONIC,
-      "https://ropsten.infura.io/".concat(process.env.INFURA_PROJECT_ID)
+      "https://ropsten.infura.io/v3/".concat(process.env.INFURA_PROJECT_ID)
     );
   } else {
     provider = new Web3.providers.HttpProvider(process.env.LOCAL_PROVIDER);
@@ -100,13 +100,17 @@ module.exports = async () => {
   const accounts = await web3.eth.getAccounts();
 
   // Send lock transaction
+  console.log("Connecting to contract....")
   const { logs } = await contract.deployed().then(function(instance) {
+    console.log("Connected to contract, sending lock...")
     return instance.lock(cosmosRecipient, coinDenom, amount, {
-      from: accounts[1],
+      from: accounts[0],
       value: amount,
       gas: 300000 // 300,000 Gwei
     });
   });
+
+  console.log("Sent lock...")
 
   // Get event logs
   const event = logs.find(e => e.event === "LogLock");
