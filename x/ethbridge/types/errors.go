@@ -14,6 +14,7 @@ const (
 	CodeInvalidEthNonce    CodeType = 1
 	CodeInvalidEthAddress  CodeType = 2
 	CodeErrJSONMarshalling CodeType = 3
+	CodeInvalidEthSymbol   CodeType = 4
 )
 
 // ErrInvalidEthNonce implements sdk.Error.
